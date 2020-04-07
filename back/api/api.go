@@ -5,6 +5,16 @@ import (
 )
 
 
+type RequestHandler struct {}
+
+
+func (this RequestHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	handler := http.DefaultServeMux
+	handler.ServeHTTP(rw, req)
+}
+
+
 func Run() {
-	http.ListenAndServe(":8080", nil)
+	handler := RequestHandler{}
+	http.ListenAndServe(":8080", handler)
 }

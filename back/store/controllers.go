@@ -5,8 +5,9 @@ import (
 )
 
 
-func Index(w api.IResponseWriter, r *api.IRequest) {
-	w.Header().Set("key", "value")
-	w.Write([]byte("store"))
+func Index(c api.Context) (interface{}, int) {
+	var data = make(map[string]string)
+	data["store"] = "!"
+	return data, 200
 }
 

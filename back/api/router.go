@@ -1,29 +1,21 @@
 package api
 
 import (
+  "encoding/json"
   "net/http"
 )
 
 
-type Route struct {
-	Url string
-	Controller http.HandlerFunc
-}
+func AddRoute(url string, controller Controller) {
+	var c = func(w http.ResponseWriter, req *http.Request){
+		context := Context{Request: *req}
 
+		data, _ := controller(context)
+		jsonData, _ := json.Marshal(data)
 
-func AddRoute(url string, controller HandlerFunc) {
-	var c = func(w http.ResponseWriter, r *http.Request){
-		req := IRequest(r)
-		controller(w, &req)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
 	}
 	http.HandleFunc(url, c)
 }
 
-
-type HandlerFunc = func (IResponseWriter, *IRequest)
-type IResponseWriter interface {
-	Header() http.Header
-	Write([]byte) (int, error)
-	WriteHeader(int)
-}
-type IRequest interface {}
