@@ -1,0 +1,4 @@
+# Postgres
+POSTGRES_DB=doggo
+POSTGRES_USER=such
+POSTGRES_PASSWORD=wow
