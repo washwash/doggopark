@@ -1,10 +1,10 @@
 package store
 
 import (
-	"log"
-  "doggo/api"
-  "doggo/api/db"
   "strconv"
+
+  "doggo/api"
+  _"doggo/api/db"
 )
 
 
@@ -22,7 +22,6 @@ type Product struct {
 
 
 func ProductList(c api.Context) (interface{}, int) {
-	log.Println(db.Client)
 	var data [1]interface{}
 	product := Product{id: 1, name: "name"}
 	productData := make(map[string]string)

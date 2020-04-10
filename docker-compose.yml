@@ -12,7 +12,8 @@ x-template: &common
     - doggo-network
 
 services:
-  db:
+  #  pls, do not use db docker container in prod
+  local-db:
     <<: *common
     image: postgres:12.2
 
@@ -21,7 +22,7 @@ services:
     image: doggo_api
     build: ./back
     depends_on:
-      - db
+      - local-db
     ports:
       - 8080:8080
 

@@ -4,6 +4,7 @@ import (
   "log"
 
   "doggo/api"
+  "doggo/api/db"
   "doggo/store"
 )
 
@@ -13,6 +14,8 @@ func main () {
 
 	api.AddRoute("/store/", store.Index)
 	api.AddRoute("/store/products/", store.ProductList)
+
+	db.Migrate()
 	api.Run()
 }
 
