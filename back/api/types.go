@@ -5,7 +5,12 @@ import (
 )
 
 
-type Context struct {
-	Request http.Request
-}
-type Controller func (c Context) (interface{}, int)
+type (
+	Context struct {
+		Request http.Request
+	}
+
+	Controller func (c Context) (interface{}, int)
+
+	RequestHandler struct {}
+)

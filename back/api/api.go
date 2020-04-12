@@ -5,9 +5,6 @@ import (
 )
 
 
-type RequestHandler struct {}
-
-
 func (this RequestHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	handler := http.DefaultServeMux
 	handler.ServeHTTP(rw, req)

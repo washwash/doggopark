@@ -15,18 +15,12 @@ func Index(c api.Context) (interface{}, int) {
 }
 
 
-type Product struct {
-	id int
-	name string
-}
-
-
 func ProductList(c api.Context) (interface{}, int) {
 	var data [1]interface{}
-	product := Product{id: 1, name: "name"}
+	product := Product{Id: 1, Title: "name"}
 	productData := make(map[string]string)
-	productData["name"] = product.name
-	productData["id"] = strconv.Itoa(product.id)
+	productData["title"] = product.Title
+	productData["id"] = strconv.Itoa(product.Id)
 	data[0] = productData
 	return data, 200
 
