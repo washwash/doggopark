@@ -2,46 +2,52 @@ package db
 
 import (
   "os"
-  "log"
-  "fmt"
-
   "database/sql"
-  _"github.com/lib/pq"
-  "github.com/golang-migrate/migrate/v4"
-  _"github.com/golang-migrate/migrate/v4/database/postgres"
-  _"github.com/golang-migrate/migrate/v4/source/file"
+ _"github.com/lib/pq"
 )
 
 
-type DataBaseClient interface{
-}
 type client struct {
 	db *sql.DB
 }
 
 
-var (
-	Client DataBaseClient
-)
-
-
-func init() {
+func Open() *client {
 	db, _ := sql.Open("postgres", os.Getenv("POSTGRES_URL"))
-	Client = &client{db: db}
+	return &client{db: db}
 }
 
 
-func Migrate() {
-	log.Printf("Migration start...")
-	defer log.Printf("Migration is complete!")
+func (this *client) Close() {
+	this.db.Close()
+}
 
-	migrationsPath := fmt.Sprintf("file:/%s", os.Getenv("DB_MIGRATIONS_PATH"))
-	m, err := migrate.New(migrationsPath, os.Getenv("POSTGRES_URL"))
 
-	if err != nil {
-		log.Fatal(err)
+func (this *client) Select(query string) []map[string]interface{} {
+	rows, _ := this.db.Query(query)
+	return this.RowsToMap(rows)
+}
+
+
+func (this *client) RowsToMap(rows *sql.Rows) []map[string]interface{} {
+	columns, _ := rows.Columns()
+	var result []map[string]interface{}
+
+	for rows.Next() {
+		cols := make([]interface{}, len(columns))
+		tempPointers := make([]interface{}, len(cols))
+		for i := range columns {
+			tempPointers[i] = &cols[i]
+		}
+
+		rows.Scan(tempPointers...)
+
+		item := make(map[string]interface{})
+		for i, name := range columns {
+			item[name] = cols[i]
+		}
+		result = append(result, item)
 	}
-
-	m.Up()
+	return result
 }
 
