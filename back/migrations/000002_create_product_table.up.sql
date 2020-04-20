@@ -10,20 +10,17 @@ $$;
 
 
 CREATE TABLE IF NOT EXISTS price(
-  id              serial         PRIMARY KEY,
-
-  amount          MONEY          NOT NULL,
+  id              serial           PRIMARY KEY,
+  amount          NUMERIC          NOT NULL,
   currency_code   currency_code
 );
 
 
 CREATE TABLE IF NOT EXISTS product(
   id          serial   PRIMARY KEY,
-
   external_id TEXT,
   title       TEXT     NOT NULL,
   description TEXT,
-
   price_id    INTEGER  REFERENCES price(id)       
 );
 

@@ -8,20 +8,19 @@ import (
 
 
 type price struct {
-	Id            int        `json:"id"`
-	Amount        d.Decimal  `json:"amount"`
-	CurrencyCode  string     `json:"currency_code"`
+	Id            int
+	Amount        d.Decimal
+	CurrencyCode  string
 }
 
 
 type product struct {
-	Id           int     `json:"id"`
-	ExternalId   string  `json:"external_id"`
-	Title        string  `json:"title"`
-	Description  string  `json:"description"`
-	PriceId      int     `json:"price_id"`
+	Id            int
+	ExternalId    string
+	Title         string
+	Description   string
+	Price         price
 
-	Price        price   `json:"-"`
 }
 
 

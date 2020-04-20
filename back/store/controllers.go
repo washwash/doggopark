@@ -13,9 +13,9 @@ func Index(c api.Context) (interface{}, int) {
 
 func ProductList(c api.Context) (interface{}, int) {
 	manager := GetProductManager()
-
 	raw := manager.All()
 	products := manager.RawToModel(raw)
 	result := products
 	return result, 200
 }
+

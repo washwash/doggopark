@@ -12,39 +12,60 @@ type client struct {
 }
 
 
-func Open() *client {
+func open() *client {
 	db, _ := sql.Open("postgres", os.Getenv("POSTGRES_URL"))
 	return &client{db: db}
 }
 
 
-func (this *client) Close() {
+func (this *client) close() {
 	this.db.Close()
 }
 
 
-func (this *client) Select(query string) []map[string]interface{} {
-	rows, _ := this.db.Query(query)
-	return this.RowsToMap(rows)
+func (this *client) query(q string) *sql.Rows {
+	rows, _ := this.db.Query(q)
+	return rows
 }
 
 
-func (this *client) RowsToMap(rows *sql.Rows) []map[string]interface{} {
+func Select(query string) []map[string]interface{} {
+	rows := Query(query)
+	return RowsToMap(rows)
+}
+
+
+func Query(query string) *sql.Rows {
+	conn := open()
+	defer conn.close()
+
+	return conn.query(query)
+}
+
+
+func RowsToMap(rows *sql.Rows) []map[string]interface{} {
 	columns, _ := rows.Columns()
 	var result []map[string]interface{}
 
 	for rows.Next() {
-		cols := make([]interface{}, len(columns))
-		tempPointers := make([]interface{}, len(cols))
+		tuples := make([]interface{}, len(columns))
+		tempPointers := make([]interface{}, len(tuples))
 		for i := range columns {
-			tempPointers[i] = &cols[i]
+			tempPointers[i] = &tuples[i]
 		}
-
 		rows.Scan(tempPointers...)
 
 		item := make(map[string]interface{})
 		for i, name := range columns {
-			item[name] = cols[i]
+			var value interface{}
+			val := tuples[i]
+			b, ok := val.([]byte)
+			if ok {
+				value = string(b)
+			} else {
+				value = val
+			}
+			item[name] = value
 		}
 		result = append(result, item)
 	}
